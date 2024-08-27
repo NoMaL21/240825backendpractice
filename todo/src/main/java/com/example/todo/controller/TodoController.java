@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,7 +16,6 @@ import com.example.todo.dto.ResponseDTO;
 import com.example.todo.dto.TodoDTO;
 import com.example.todo.service.TodoService;
 import com.example.todo.model.TodoEntity;
-import com.example.todo.service.TodoService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -76,4 +76,17 @@ public class TodoController {
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
+
+	@GetMapping
+	public ResponseEntity<?>retrieveTodoList(){
+		String temporaryUserId = "temporary-user";
+		List<TodoEntity> entities = service.retrieve(temporaryUserId);
+		List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
+		
+		ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
+		
+		//HTTP Status 200  상태로 response 를 전송한다.
+		return ResponseEntity.ok().body(response);
+	}
+
 }

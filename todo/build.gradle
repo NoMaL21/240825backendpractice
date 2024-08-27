@@ -17,8 +17,6 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
-	
-
 }
 
 repositories {

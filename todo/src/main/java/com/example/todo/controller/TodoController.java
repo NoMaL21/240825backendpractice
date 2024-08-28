@@ -45,7 +45,7 @@ public class TodoController {
 			log.info("Log:dto => entity ok!");
 			
 			//entity userId를 임시로 지정한다.
-			entity.setUserId("temporary-userid");
+			entity.setUserId("temporary-user");
 			
 			//service.create를 통해 repository에 entity를 저장한다.
 			//이때 넘어오는 값이 없을 수도 있으므로 List가 아닌 Optional로 한다.
@@ -82,6 +82,10 @@ public class TodoController {
 	public ResponseEntity<?>retrieveTodoList(){
 		String temporaryUserId = "temporary-user";
 		List<TodoEntity> entities = service.retrieve(temporaryUserId);
+		
+		// 로그를 추가하여 조회된 엔티티를 출력
+		log.info("Retrieved entities: {}", entities);
+		
 		List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
 		
 		ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();

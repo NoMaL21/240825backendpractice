@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 public class TodoEntity {
 	@Id
 	@GeneratedValue(generator="system-uuid")
-	@UuidGenerator(style = UuidGenerator.Style.TIME)
+	@UuidGenerator(style = UuidGenerator.Style.RANDOM)
 	private String id;
 	private String userId;
 	private String title;

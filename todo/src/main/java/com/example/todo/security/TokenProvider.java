@@ -13,17 +13,20 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
+@Service
 public class TokenProvider {
 	private static final String SECRET_KEY ="NMA8JPctFuna59f5";
 	
-	public String creaate(UserEntity userEntity) {
+	public String create(UserEntity userEntity) {
 		Date expireDate = Date.from(
 				Instant.now()
 				.plus(1,ChronoUnit.DAYS)
 				);
 		return Jwts.builder()
 				.signWith(SignatureAlgorithm.HS512, SECRET_KEY)
-				.setSubject(userEntity.getId())
+				.setSubject(userEntity.getId().toString())
+				//만약 여기서 다시 uuid로 변환하려면 UUID userId = UUID.fromString(claims.getSubject()); 이렇게 한다
 				.setIssuer("todo app")
 				.setIssuedAt(new Date())
 				.setExpiration(expireDate)

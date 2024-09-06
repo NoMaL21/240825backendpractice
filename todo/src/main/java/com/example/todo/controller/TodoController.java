@@ -3,6 +3,7 @@ package com.example.todo.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +32,17 @@ public class TodoController {
 	@Autowired
 	private TodoService service;
 	
+	/*
 	@PostMapping
 	public ResponseEntity<?>createTodo(@RequestBody TodoDTO dto){
 		try {
-			/*
-			POST localhost:8080/todo
-			{
-				"title" :"My first todo".
-				"done" : false
-			}
-			*/
+			
+			//POST localhost:8080/todo
+			//{
+			//	"title" :"My first todo".
+			//	"done" : false
+			//}
+			
 			log.info("Log:createeTodo entrance");
 			
 			//dto를 이용해 테이블에 저장하기 위한 entity를 생성한다.
@@ -60,15 +62,15 @@ public class TodoController {
 			log.info("Log:entities => dtos ok!");
 			
 			//ResponseDTO를 생성한다.
-			/*
-				"error":null,
-				"data":[
-					{
-						"id" : "c0a83801-918e-1acd-8191-8ecbfbf50001"
-						"title" : "My first todo",
-						"done" : false
-					}
-			 */
+			//
+			//	"error":null,
+			//	"data":[
+			//		{
+			//			"id" : "c0a83801-918e-1acd-8191-8ecbfbf50001"
+			//			"title" : "My first todo",
+			//			"done" : false
+			//		}
+			//
 			ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
 			log.info("Log:responsedto ok!");
 			
@@ -80,6 +82,7 @@ public class TodoController {
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
+	*/
 
 	@PostMapping
 	public ResponseEntity<?>createTodo(@AuthenticationPrincipal String userId, @RequestBody TodoDTO dto){
@@ -105,7 +108,7 @@ public class TodoController {
 				return ResponseEntity.badRequest().body(response);
 			}
 	}
-	
+	/*
 	@GetMapping
 	public ResponseEntity<?>retrieveTodoList(){
 		String temporaryUserId = "temporary-user";
@@ -121,7 +124,8 @@ public class TodoController {
 		//HTTP Status 200  상태로 response 를 전송한다.
 		return ResponseEntity.ok().body(response);
 	}
-
+	*/
+	
 	@GetMapping("/update")
 	public ResponseEntity<?>update(@RequestBody TodoDTO dto){
 		try {
@@ -152,8 +156,8 @@ public class TodoController {
 		}
 	
 	@GetMapping
-	public ResponseEntity<?> retrieveTodo(@AuthenticationPrincipal String userId){
-		List<TodoEntity> entities = service.retrieve(userId);
+	public ResponseEntity<?> retrieveTodo(@AuthenticationPrincipal UUID userId){
+		List<TodoEntity> entities = service.retrieve(userId.toString());
 		List<TodoDTO> dtos =
 				entities.stream().map(TodoDTO::new).collect(Collectors.toList());
 		
@@ -162,6 +166,7 @@ public class TodoController {
 		return ResponseEntity.ok().body(response);
 	}
 	
+	/*
 	@PutMapping
 	public ResponseEntity<?>updateTodo(@RequestBody TodoDTO dto){
 		try {
@@ -190,7 +195,8 @@ public class TodoController {
 			return ResponseEntity.badRequest().body(response);
 		}
 	}
-
+*/
+	
 	@PutMapping
 	public ResponseEntity<?>updateTodo(@AuthenticationPrincipal String userId, @RequestBody TodoDTO dto){
 		try {

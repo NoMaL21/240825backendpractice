@@ -39,9 +39,13 @@ public class UserController {
 					.build();
 			
 			UserEntity registeredUser = userService.create(user);
+			
+			log.warn(registeredUser.getId().toString());
+			
 			UserDTO responseUserDTO = userDTO.builder()
 					.email(registeredUser.getEmail())
-					.id(registeredUser.getId())
+					.id(registeredUser.getId().toString())
+					//만약 여기서 다시 uuid로 변환하려면 UUID userId = UUID.fromString(claims.getSubject()); 이렇게 한다
 					.username(registeredUser.getUsername())
 					.build();
 			return ResponseEntity.ok().body(responseUserDTO);
@@ -60,7 +64,8 @@ public class UserController {
 			final String token = tokenProvider.create(user);
 			final UserDTO responseUserDTO = UserDTO.builder()
 					.email(user.getEmail())
-					.id(user.getId())
+					.id(user.getId().toString())
+					//만약 여기서 다시 uuid로 변환하려면 UUID userId = UUID.fromString(claims.getSubject()); 이렇게 한다
 					.token(token)
 					.build();
 			

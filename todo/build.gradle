@@ -43,6 +43,8 @@ dependencies {
 	
 	implementation group:'io.jsonwebtoken', name:'jjwt', version:'0.9.1'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	
+	implementation 'javax.xml.bind:jaxb-api:2.3.1'
 }
 
 tasks.named('test') {

@@ -62,6 +62,9 @@ public class UserController {
 		
 		if(user != null) {
 			final String token = tokenProvider.create(user);
+			
+			log.warn(token);
+			
 			final UserDTO responseUserDTO = UserDTO.builder()
 					.email(user.getEmail())
 					.id(user.getId().toString())

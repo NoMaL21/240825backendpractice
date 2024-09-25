@@ -74,7 +74,7 @@ public class WebSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:3000");  // 허용할 도메인 설정
+        configuration.addAllowedOriginPattern("http://localhost:3000");  // 허용할 도메인 설정
         configuration.addAllowedMethod("*");  // 모든 HTTP 메서드 허용
         configuration.addAllowedHeader("*");  // 모든 헤더 허용
         configuration.setAllowCredentials(true);  // 인증 정보 허용
@@ -86,85 +86,3 @@ public class WebSecurityConfig {
 }
 
 
-
-/*
-package com.example.todo.config;
-
-import org.springframework.web.filter.CorsFilter;
-
-import java.time.LocalDateTime;
-
-import jakarta.servlet.http.HttpServletResponse;
-
-import org.h2.util.json.JSONObject;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import org.springframework.http.MediaType;
-
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-//import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.config.http.SessionCreationPolicy;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import com.example.todo.security.JwtAuthenticationFilter;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.extern.slf4j.Slf4j;
-
-@Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-@EnableWebSecurity
-@Slf4j
-public class WebSecurityConfig{
-
-    @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
-	
-	//@Override
-    protected void configure(HttpSecurity http) throws Exception{
-    	http.cors()
-    	.and()
-    	.csrf()
-    	.disable()
-    	.httpBasic()
-    	.disable()
-    	.httpBasic()
-    	.disable()
-    	.sessionManagement()
-    	.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-    	.and()
-    	.authorizeRequests()
-    	.requestMatchers("/","/auth/**").permitAll()
-    	.anyRequest()
-    	.authenticated();
-    	
-    	http.exceptionHandling()
-    	.authenticationEntryPoint((request, response, e) ->
-    	{
-    		Map<String,Object< data = new HashMap<String, Object>();
-    		data.put("status", HttpServletResponse.SC_FORBIDDEN);
-    		data.put("message", e.getMessage());
-    		
-    		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-    		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-    		
-    		objectMapper.writeValue(response.getOutputStream(), data);
-    	
-    	});
-    	
-    	http.addFilterAfter(jwtAuthenticationFilter, CorsFilter.class);
-    }
-    
-}*/

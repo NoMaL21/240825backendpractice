@@ -38,6 +38,7 @@ public class UserController {
 					.email(userDTO.getEmail())
 					.username(userDTO.getUsername())
 					.password(passwordEncoder.encode(userDTO.getPassword()))
+					.kakaoauthtoken(null)
 					.build();
 			
 			UserEntity registeredUser = userService.create(user);
@@ -49,6 +50,7 @@ public class UserController {
 					.id(registeredUser.getId().toString())
 					//만약 여기서 다시 uuid로 변환하려면 UUID userId = UUID.fromString(claims.getSubject()); 이렇게 한다
 					.username(registeredUser.getUsername())
+					.kakaoauthtoken(null)
 					.build();
 			return ResponseEntity.ok().body(responseUserDTO);
 		}

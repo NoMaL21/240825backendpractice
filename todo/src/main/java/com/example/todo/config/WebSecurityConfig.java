@@ -49,9 +49,13 @@ public class WebSecurityConfig {
             .and()
             .authorizeHttpRequests((requests) -> requests
                 .requestMatchers("/", "/auth/**").permitAll()
+                .requestMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated()
             );
-
+        
+        // H2 콘솔을 위한 설정 (Frame 방지 비활성화)
+        http.headers().frameOptions().disable();
+        
         // Exception handling
         http.exceptionHandling()
             .authenticationEntryPoint((request, response, authException) -> {

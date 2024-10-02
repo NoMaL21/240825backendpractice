@@ -1,5 +1,9 @@
 package com.example.todo.security;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -16,7 +20,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class TokenProvider {
-	private static final String SECRET_KEY ="NMA8JPctFuna59f5";
+	 private String SECRET_KEY;
+
+	    public TokenProvider() {
+	        try (InputStream input = getClass().getClassLoader().getResourceAsStream("jwt-secret.properties")) {
+	            Properties prop = new Properties();
+	            if (input == null) {
+	                log.error("Sorry, unable to find jwt-secret.properties");
+	                return;
+	            }
+	            // Load the properties file
+	            prop.load(input);
+	            SECRET_KEY = prop.getProperty("jwt.secret");
+	        } catch (IOException ex) {
+	            log.error("Error loading secret key", ex);
+	        }
+	    }
 	
 	public String create(UserEntity userEntity) {
 		Date expireDate = Date.from(

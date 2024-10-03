@@ -116,7 +116,7 @@ public class UserController {
 	            log.info(decodedToken);
 	            
 	            ProcessBuilder processBuilder = new ProcessBuilder(
-	            	    "python3", 
+	            	    "python", 
 	            	    "src/main/resources/get_kakao_code.py", 
 	            	    "--authorize_code", 
 	            	    decodedToken
@@ -131,10 +131,13 @@ public class UserController {
 	            while ((line = reader.readLine()) != null) {
 	                output.append(line);
 	            }
-
+	            
+	            log.info("Python script output: " + output.toString());
+	            
 	            // 스크립트 실행 후 프로세스 종료 대기
 	            int exitCode = process.waitFor();
 	            if (exitCode != 0) {
+	            	log.error("Python script failed with exit code: " + exitCode);
 	                throw new RuntimeException("Failed to execute Python script");
 	            }
 

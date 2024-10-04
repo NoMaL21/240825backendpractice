@@ -144,6 +144,7 @@ public class UserController {
 	            JSONObject json = new JSONObject(output.toString());
 	            String accessToken = Base64.getEncoder().encodeToString(json.getString("access_token").getBytes());
 	            String refreshToken = Base64.getEncoder().encodeToString(json.getString("refresh_token").getBytes());
+	            String tokenType = json.getString("token_type");
 	            int expiresIn = json.getInt("expires_in");
 	            int refreshTokenExpiresIn = json.getInt("refresh_token_expires_in");
 
@@ -155,6 +156,7 @@ public class UserController {
 	                    .refreshToken(refreshToken)
 	                    .expiresIn(expiresIn)
 	                    .refreshTokenExpiresIn(refreshTokenExpiresIn)
+	                    .tokenType(tokenType)
 	                    .build();
 
 	            // 토큰 저장

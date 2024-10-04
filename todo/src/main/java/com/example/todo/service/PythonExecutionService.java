@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.time.LocalTime;
 import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -34,12 +35,22 @@ public class PythonExecutionService {
 	@Autowired
     private TokenRepository tokenRepository;
 	
-	@Scheduled(fixedRate = 60000)
+	@Scheduled(fixedRate = 1000)//60000 = 1분
     public void checkAndExecuteTodos() {
         // 현재 시간보다 실행 시간이 이전이고 대기 중인 Todo를 조회
         List<TodoEntity> todos = todoRepository.findByExecutionTimeBeforeAndState(LocalTime.now(), TodoState.PENDING);
-        
+        log.info("Schedule Running.. ");
         for (TodoEntity todo : todos) {
+        	log.info(todo.getTitle() + " is excuting.. ");
+    		String targetname = todo.getTarget_name();
+    		String title = todo.getTitle();
+    		String userId = todo.getUserId();
+    		String taskId = todo.getId();
+    		
+    		log.info("taskId : " + taskId );
+    		log.info(" userId :" + userId);
+    		log.info(" title : "+  title);
+    		log.info(" targetname : " + targetname);
             executeTodo(todo);
         }
     }
@@ -50,7 +61,12 @@ public class PythonExecutionService {
 		String userId = todo.getUserId();
 		String taskId = todo.getId();
 		
-		TokenEntity token = tokenRepository.findByUserId(userId);
+		log.info("taskId : " + taskId );
+		log.info(" userId :" + userId);
+		log.info(" title : " + title);
+		log.info(" targetname : " + targetname);
+		
+		TokenEntity token = tokenRepository.findByUserId(UUID.fromString(userId));
 		
 		if (token != null) {
 			byte[] AccessToken_decodedBytes = Base64.getDecoder().decode(token.getAccessToken());
@@ -62,12 +78,18 @@ public class PythonExecutionService {
 			String expiresIn = Integer.toString(token.getExpiresIn());
 			String refreshTokenExpiresIn = Integer.toString(token.getRefreshTokenExpiresIn());
 			
+			log.info("accessToken : " + accessToken );
+			log.info("tokenType :" + tokenType);
+			log.info("refreshToken : " + refreshToken);
+			log.info("expiresIn : " + expiresIn);
+			log.info("refreshTokenExpiresIn : " + refreshTokenExpiresIn);
+			
 	        try {
 	            // Python 스크립트를 실행
 	            ProcessBuilder processBuilder = new ProcessBuilder(
 	            	    "python", 
 	            	    "src/main/resources/Instar_to_Kakaotalk.py", 
-	            	    "--target_name", targetname,
+	            	    "--target_username", targetname,
 	            	    "--task_id", taskId,
 	            	    "--access_token", accessToken,
 	            	    "--token_type", tokenType,

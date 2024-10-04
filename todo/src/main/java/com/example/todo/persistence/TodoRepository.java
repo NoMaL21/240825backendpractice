@@ -1,6 +1,6 @@
 package com.example.todo.persistence;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,6 +16,6 @@ public interface TodoRepository extends JpaRepository<TodoEntity, String> {
 	@Query("select t from TodoEntity t where t.userId = ?1")
 	List<TodoEntity>findByUserId(String userId);
 
-	List<TodoEntity> findByExecutionTimeBeforeAndState(LocalDateTime now, TodoState pending);
+	List<TodoEntity> findByExecutionTimeBeforeAndState(LocalTime now, TodoState pending);
 
 }

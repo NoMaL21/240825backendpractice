@@ -6,5 +6,5 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface TokenRepository extends JpaRepository<TokenEntity, UUID> {
-    TokenEntity findByUserId(UUID userId);
+    TokenEntity findByUserId(String userId);
 }

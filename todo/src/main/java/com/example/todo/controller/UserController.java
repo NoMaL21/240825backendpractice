@@ -106,7 +106,7 @@ public class UserController {
 	    	user.setKakaoauthtoken(encodedKakaoAuthToken);
 	        userService.update(user); // 사용자 정보 업데이트
 	        
-	        log.info(user.getEmail());
+	        //log.info(user.getEmail());
 	        // Kakao 인증 코드를 이용해 Python 스크립트를 실행하는 로직 추가
 	        try {
 	            // Kakao 인증 토큰을 기반으로 Python 스크립트 실행
@@ -118,8 +118,7 @@ public class UserController {
 	            ProcessBuilder processBuilder = new ProcessBuilder(
 	            	    "python", 
 	            	    "src/main/resources/get_kakao_code.py", 
-	            	    "--authorize_code", 
-	            	    decodedToken
+	            	    "--authorize_code", decodedToken
 	            	);
 	            processBuilder.redirectErrorStream(true);
 	            Process process = processBuilder.start();
@@ -132,7 +131,7 @@ public class UserController {
 	                output.append(line);
 	            }
 	            
-	            log.info("Python script output: " + output.toString());
+	            log.info("get_kakao_code.py script output: " + output.toString());
 	            
 	            // 스크립트 실행 후 프로세스 종료 대기
 	            int exitCode = process.waitFor();
@@ -143,8 +142,8 @@ public class UserController {
 
 	            // JSON 형식으로 토큰 정보 파싱 (예: JSONObject json = new JSONObject(output.toString()))
 	            JSONObject json = new JSONObject(output.toString());
-	            String accessToken = passwordEncoder.encode(json.getString("access_token"));
-	            String refreshToken = passwordEncoder.encode(json.getString("refresh_token"));
+	            String accessToken = Base64.getEncoder().encodeToString(json.getString("access_token").getBytes());
+	            String refreshToken = Base64.getEncoder().encodeToString(json.getString("refresh_token").getBytes());
 	            int expiresIn = json.getInt("expires_in");
 	            int refreshTokenExpiresIn = json.getInt("refresh_token_expires_in");
 

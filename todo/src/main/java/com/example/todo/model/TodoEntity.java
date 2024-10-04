@@ -7,7 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import org.hibernate.annotations.UuidGenerator;
 
@@ -27,12 +27,13 @@ public class TodoEntity {
 	@GeneratedValue(generator="system-uuid")
 	@UuidGenerator(style = UuidGenerator.Style.RANDOM)
 	private String id;
+	
 	private String userId;
 	private String title;
 	private boolean done;
 	
 	private String target_name;
-	private LocalDateTime executionTime;
+	private LocalTime executionTime;
 	
 	@Enumerated(EnumType.STRING)
 	private TodoState state;

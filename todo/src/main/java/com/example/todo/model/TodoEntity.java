@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 import org.hibernate.annotations.UuidGenerator;
@@ -37,4 +38,6 @@ public class TodoEntity {
 	
 	@Enumerated(EnumType.STRING)
 	private TodoState state;
+	
+	private LocalDate lastExecutionDate;  // 마지막 실행 날짜 추가
 }

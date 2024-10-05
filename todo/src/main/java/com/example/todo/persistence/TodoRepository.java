@@ -18,4 +18,6 @@ public interface TodoRepository extends JpaRepository<TodoEntity, String> {
 
 	List<TodoEntity> findByExecutionTimeBeforeAndState(LocalTime now, TodoState pending);
 
+	List<TodoEntity> findByState(TodoState completed);
+
 }

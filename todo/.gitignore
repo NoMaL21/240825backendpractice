@@ -1,3 +1,5 @@
 /src/main/resources/jwt-secret.properties
 /src/main/resources/credentials.json
 /src/main/resources/chromedriver-win32/
+/todo/kakao_code.json
+/todo/bin/main/chromedriver-win32/

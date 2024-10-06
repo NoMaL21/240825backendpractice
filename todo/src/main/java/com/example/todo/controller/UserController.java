@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -102,7 +103,10 @@ public class UserController {
 	public ResponseEntity<?> handleKakaoAuth(@AuthenticationPrincipal String userId, @RequestBody UserDTO userDTO) {
 	    UserEntity user = userService.getById(UUID.fromString(userId)); // UUID로 사용자 조회
 	    if (user != null) {
-	    	String encodedKakaoAuthToken = Base64.getEncoder().encodeToString(userDTO.getKakaoauthtoken().getBytes());
+	    	String encodedKakaoAuthToken = 
+	    			Base64.getEncoder()
+	    			.encodeToString(userDTO.getKakaoauthtoken().getBytes());
+	    	
 	    	user.setKakaoauthtoken(encodedKakaoAuthToken);
 	        userService.update(user); // 사용자 정보 업데이트
 	        
@@ -171,5 +175,19 @@ public class UserController {
 	        return ResponseEntity.badRequest().body("User not found.");
 	    }
 	}
-
+	
+	@GetMapping("/kakaostatus")
+	public ResponseEntity<?> returnKakaoAuth(@AuthenticationPrincipal String userId) {
+	    UserEntity user = userService.getById(UUID.fromString(userId)); // UUID로 사용자 조회
+	    if (user != null) {
+	    	if(user.getKakaoauthtoken() != null){
+	    		return ResponseEntity.ok(true);
+	    	} else {
+	    		return ResponseEntity.ok(false);
+	    	}
+	    } else {
+	        return ResponseEntity.badRequest().body("User not found.");
+	    }
+	    
+	}
 }

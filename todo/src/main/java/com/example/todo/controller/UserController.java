@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.UUID;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -176,18 +178,26 @@ public class UserController {
 	    }
 	}
 	
-	@GetMapping("/kakaostatus")
-	public ResponseEntity<?> returnKakaoAuth(@AuthenticationPrincipal String userId) {
-	    UserEntity user = userService.getById(UUID.fromString(userId)); // UUID로 사용자 조회
+	@GetMapping("/userstatus")
+	public ResponseEntity<?> returnUserStatus(@AuthenticationPrincipal String userId) {
+	    UserEntity user = userService.getById(UUID.fromString(userId));
+	    
 	    if (user != null) {
-	    	if(user.getKakaoauthtoken() != null){
-	    		return ResponseEntity.ok(true);
-	    	} else {
-	    		return ResponseEntity.ok(false);
-	    	}
+	        String username = user.getUsername();
+	        String email = user.getEmail();
+	        String kakaoAuthToken = user.getKakaoauthtoken();
+	        
+	        // Kakao 인증 여부 확인
+	        boolean isKakaoAuthenticated = kakaoAuthToken != null && !kakaoAuthToken.isEmpty();
+	        
+	        Map<String, Object> response = new HashMap<>();
+	        response.put("username", username);
+	        response.put("email", email);
+	        response.put("isKakaoAuthenticated", isKakaoAuthenticated);
+	        
+	        return ResponseEntity.ok(response);
 	    } else {
 	        return ResponseEntity.badRequest().body("User not found.");
 	    }
-	    
 	}
 }

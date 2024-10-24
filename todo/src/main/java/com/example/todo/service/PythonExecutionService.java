@@ -24,11 +24,15 @@ import java.time.LocalTime;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Slf4j
 @Service
 public class PythonExecutionService {
 
+	private final ExecutorService executorService = Executors.newFixedThreadPool(5);
+	
 	@Autowired
     private TodoRepository todoRepository;
 	
@@ -81,13 +85,15 @@ public class PythonExecutionService {
 	        todo.setState(TodoState.IN_PROGRESS);
 	        todoRepository.save(todo);  // 상태 업데이트
 	        
-	        try {
-	            executeTodo(todo);  // Python 스크립트 실행
-	        } catch (Exception e) {
-	            log.error("Todo 실행 중 오류 발생: {}", e.getMessage());
-	            todo.setState(TodoState.ERROR);  // 실패 시 ERROR로 변경
-	            todoRepository.save(todo);  // 상태 업데이트
-	        }
+	        executorService.submit(() -> {
+		        try {
+		            executeTodo(todo);  // Python 스크립트 실행
+		        } catch (Exception e) {
+		            log.error("Todo 실행 중 오류 발생: {}", e.getMessage());
+		            todo.setState(TodoState.ERROR);  // 실패 시 ERROR로 변경
+		            todoRepository.save(todo);  // 상태 업데이트
+		        }
+	        });
 	        
 	    } else {
 	        log.info(todo.getTitle() + "는 아직 실행 시간이 아니거나 이미 오늘 실행되었습니다.");
@@ -101,10 +107,10 @@ public class PythonExecutionService {
 		String userId = todo.getUserId();
 		String taskId = todo.getId();
 		
-		log.info("taskId : " + taskId );
-		log.info(" userId :" + userId);
+		//log.info("taskId : " + taskId );
+		//log.info(" userId :" + userId);
 		//log.info(" title : " + title);
-		log.info(" targetname : " + targetname);
+		//log.info(" targetname : " + targetname);
 		
 		TokenEntity token = tokenRepository.findByUserId(UUID.fromString(userId));
 		
@@ -115,11 +121,11 @@ public class PythonExecutionService {
 			String expiresIn = Integer.toString(token.getExpiresIn());
 			String refreshTokenExpiresIn = Integer.toString(token.getRefreshTokenExpiresIn());
 			
-			log.info("accessToken : " + accessToken );
-			log.info("tokenType :" + tokenType);
-			log.info("refreshToken : " + refreshToken);
-			log.info("expiresIn : " + expiresIn);
-			log.info("refreshTokenExpiresIn : " + refreshTokenExpiresIn);
+			//log.info("accessToken : " + accessToken );
+			//log.info("tokenType :" + tokenType);
+			//log.info("refreshToken : " + refreshToken);
+			//log.info("expiresIn : " + expiresIn);
+			//log.info("refreshTokenExpiresIn : " + refreshTokenExpiresIn);
 			
 	        try {
 	            // Python 스크립트를 실행
